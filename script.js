@@ -29,8 +29,10 @@ function loadTasks() {
     tasks.forEach(task => renderTask(task));
 }
 
-function renderTask(task) {
-    const taskList = document.getElementById(`${task.status}List`);
+function renderTask(task, taskList) {
+    if (!taskList) {
+        taskList = document.getElementById(`${task.status}List`);
+    }
     const taskItem = document.createElement('li');
     taskItem.setAttribute('data-id', task.id);
     taskItem.innerHTML = `
@@ -77,8 +79,11 @@ function removeTask(taskId) {
 }
 
 function refreshTaskLists() {
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     document.getElementById('plannedList').innerHTML = '';
     document.getElementById('completeList').innerHTML = '';
     document.getElementById('importantList').innerHTML = '';
-    loadTasks();
+    tasks.forEach(task => {
+        renderTask(task, document.getElementById(`${task.status}List`));
+    });
 }
