@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', (event) => {
+    const addTaskButton = document.querySelector('button[onclick="addTask()"]');
+    addTaskButton.addEventListener('click', addTask);
     loadTasks();
 });
 
