@@ -22,7 +22,7 @@ function addTask() {
     };
     taskList.push(task);
     saveTask(taskList);
-    renderTask(taskList);
+    renderTask(task);
     taskInput.value = ''; // clear the input field
   } catch (error) {
     console.error('Error adding task:', error);
@@ -39,20 +39,24 @@ function saveTask(taskList) {
 }
 
 // Function to render the task list
-function renderTask(taskList) {
+function renderTask(task) {
   try {
-    const taskListElement = document.getElementById('taskList');
-    if (!taskListElement) {
+    let listElement;
+    if (task.status === 'important') {
+      listElement = document.getElementById('importantList');
+    } else if (task.status === 'planned') {
+      listElement = document.getElementById('plannedList');
+    } else if (task.status === 'complete') {
+      listElement = document.getElementById('completeList');
+    }
+    if (!listElement) {
       console.error('Task list element not found');
       return;
     }
-    taskListElement.innerHTML = ''; // clear the list
-    taskList.forEach((task) => {
-      const taskElement = document.createElement('li');
-      taskElement.textContent = task.text;
-      taskListElement.appendChild(taskElement);
-      console.log(`Task added: ${task.text}`);
-    });
+    const taskListItem = document.createElement('li');
+    taskListItem.textContent = task.text;
+    listElement.appendChild(taskListItem);
+    console.log(`Task added: ${task.text}`);
   } catch (error) {
     console.error('Error rendering task list:', error);
   }
@@ -64,7 +68,9 @@ function loadTaskList() {
     const storedTaskList = localStorage.getItem('taskList');
     if (storedTaskList) {
       taskList = JSON.parse(storedTaskList);
-      renderTask(taskList);
+      taskList.forEach((task) => {
+        renderTask(task);
+      });
     }
   } catch (error) {
     console.error('Error loading task list:', error);
