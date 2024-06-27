@@ -51,6 +51,7 @@ function renderTask(taskList) {
       const taskElement = document.createElement('li');
       taskElement.textContent = task.text;
       taskListElement.appendChild(taskElement);
+      console.log(`Task added: ${task.text}`);
     });
   } catch (error) {
     console.error('Error rendering task list:', error);
