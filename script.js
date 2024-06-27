@@ -19,13 +19,14 @@ function addTask() {
 }
 
 function saveTask(task) {
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    let tasks = getCookie('tasks') || [];
     tasks.push(task);
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    setCookie('tasks', JSON.stringify(tasks), 30);
 }
 
 function loadTasks() {
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    let tasks = getCookie('tasks') || [];
+    tasks = JSON.parse(tasks);
     tasks.forEach(task => renderTask(task));
 }
 
@@ -60,30 +61,56 @@ function moveToComplete(taskId) {
 }
 
 function updateTaskStatus(taskId, status) {
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    let tasks = getCookie('tasks') || [];
+    tasks = JSON.parse(tasks);
     tasks = tasks.map(task => {
         if (task.id === taskId) {
             task.status = status;
         }
         return task;
     });
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    setCookie('tasks', JSON.stringify(tasks), 30);
     refreshTaskLists();
 }
 
 function removeTask(taskId) {
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    let tasks = getCookie('tasks') || [];
+    tasks = JSON.parse(tasks);
     tasks = tasks.filter(task => task.id !== taskId);
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    setCookie('tasks', JSON.stringify(tasks), 30);
     refreshTaskLists();
 }
 
 function refreshTaskLists() {
-    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    const tasks = getCookie('tasks') || [];
+    tasks = JSON.parse(tasks);
     document.getElementById('plannedList').innerHTML = '';
     document.getElementById('completeList').innerHTML = '';
     document.getElementById('importantList').innerHTML = '';
     tasks.forEach(task => {
         renderTask(task, document.getElementById(`${task.status}List`));
     });
+}
+
+function getCookie(cname) {
+    let name = cname + '=';
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return '';
+}
+
+function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    let expires = 'expires=' + d.toUTCString();
+    document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
 }
