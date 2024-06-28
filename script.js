@@ -1,7 +1,5 @@
-// Task list array
 let taskList = [];
 
-// Function to add a task
 function addTask() {
   try {
     const taskInput = document.getElementById('taskInput');
@@ -14,7 +12,7 @@ function addTask() {
       console.error('Task text is empty');
       return;
     }
-    const taskStatus = 'planned'; // default status
+    const taskStatus = 'planned';
     const task = {
       id: Date.now(),
       text: taskText,
@@ -23,13 +21,12 @@ function addTask() {
     taskList.push(task);
     saveTask(taskList);
     renderTask(task);
-    taskInput.value = ''; // clear the input field
+    taskInput.value = '';
   } catch (error) {
     console.error('Error adding task:', error);
   }
 }
 
-// Function to save the task list to local storage
 function saveTask(taskList) {
   try {
     localStorage.setItem('taskList', JSON.stringify(taskList));
@@ -38,7 +35,6 @@ function saveTask(taskList) {
   }
 }
 
-// Function to render the task list
 function renderTask(task) {
   try {
     let listElement;
@@ -110,7 +106,6 @@ function renderTask(task) {
   }
 }
 
-// Function to render the task list
 function renderTaskList() {
   try {
     const importantList = document.getElementById('importantList');
@@ -127,7 +122,6 @@ function renderTaskList() {
   }
 }
 
-// Load the task list from local storage
 function loadTaskList() {
   try {
     const storedTaskList = localStorage.getItem('taskList');
@@ -140,7 +134,6 @@ function loadTaskList() {
   }
 }
 
-// Add event listener to the add task button
 document.addEventListener('DOMContentLoaded', () => {
   const addTaskButton = document.getElementById('addTaskButton');
   if (!addTaskButton) {
